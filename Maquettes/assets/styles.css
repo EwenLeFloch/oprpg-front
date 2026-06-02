@@ -1,0 +1,70 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  background-image: url('../assets/images/background.gif');
+  background-size: cover;
+  background-position: center;
+  padding: 40px;
+}
+@font-face {
+  font-family: 'Anime';
+  src: url('../assets/fonts/animeace2bb_tt/animeace2_reg.ttf') format('truetype');
+}
+.header {
+  position: relative;
+  border-radius: 10px;
+  margin: auto;
+  height: 80px;
+  background-image: url('../assets/images/oprpg_header.png');
+  background-size: cover;
+  background-position-y: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+}
+.logo {
+  height: 80%;
+  position: relative;
+}
+.rpg {
+  position: absolute;
+  top: 75%;
+  left: 120px;
+  height: 70%;
+}
+.nav {
+  height: 100%;
+}
+.nav_list {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  height: 100%;
+}
+.nav_item {
+  color: black;
+  cursor: pointer;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.nav_item a {
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  font-family: 'Anime';
+  -webkit-text-stroke: 0.5px black;
+  height: 100%;
+  width: 100%;
+}
