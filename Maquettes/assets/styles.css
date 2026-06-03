@@ -79,6 +79,7 @@ body {
   -webkit-text-stroke: 0.5px black;
   height: 100%;
   width: 100%;
+  text-shadow: 2px 2px 2px black;
 }
 
 .home_main {
@@ -217,4 +218,238 @@ body {
   margin-top: 20px;
   color: rgba(255, 255, 255, 0.8);
   font-size: 12px;
+}
+
+.combat_main {
+  display: flex;
+  gap: 20px;
+}
+.combat {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.historique,
+.ennemi {
+  width: 100%;
+  max-width: calc(50% - 10px);
+  height: 300px;
+  border-radius: 10px;
+  border: 1px #b17b3b solid;
+  padding: 20px;
+
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.historique h2,
+.ennemi h2 {
+  color: #ffd230;
+  font-family: 'Anime';
+}
+.historique_content {
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px #b17b3b solid;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.historique_text {
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  line-height: 20px;
+  color: white;
+  border-radius: 5px;
+}
+.historique_text-allied::before {
+  float: left;
+  margin-right: 5px;
+  content: '';
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background-color: #ffd230;
+  border-radius: 5px 0 0 5px;
+}
+.historique_text-enemy::before {
+  margin-right: 5px;
+  float: left;
+  content: '';
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background-color: red;
+  border-radius: 5px 0 0 5px;
+}
+.historique_text em {
+  font-weight: bold;
+  font-style: normal;
+  color: #ffd230;
+}
+.historique_text strong {
+  color: red;
+}
+
+#red {
+  color: red;
+}
+
+.ennemi_content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+  justify-self: center;
+  gap: 20px;
+}
+.ennemi_content img {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  align-self: center;
+}
+.status {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+}
+.etat {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-weight: bold;
+}
+.vie {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.vie p {
+  color: white;
+  font-weight: bold;
+}
+#vie {
+  width: 100%;
+  border-radius: 8px;
+  height: 15px;
+  flex-grow: 0;
+}
+#vie::-moz-progress-bar {
+  background-color: red;
+}
+
+.capacites {
+  height: 100%;
+  max-height: 50%;
+}
+.capacites_card {
+  display: flex;
+  gap: 10px;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  border: 1px #b17b3b solid;
+  border-radius: 10px;
+  color: white;
+}
+.capacites_card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.capacites_card-content h2 {
+  color: #ffd230;
+}
+.capacites_card img {
+  height: 80px;
+  align-self: center;
+}
+.profil {
+  min-width: 250px;
+  flex-shrink: 0;
+  border: 1px #b17b3b solid;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border-radius: 10px;
+}
+.profil_perso {
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+.profil_perso-content {
+  padding: 10px;
+}
+.profil_perso img {
+  height: 80px;
+  width: 80px;
+  border-radius: 10px;
+  border: 5px #b17b3b solid;
+  align-self: center;
+}
+.level {
+  text-align: center;
+  color: greenyellow;
+  font-weight: bold;
+}
+.perso_bar {
+  margin-top: 15px;
+  font-size: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: space-between;
+}
+.profil_perso progress {
+  width: 100%;
+  border-radius: 5px;
+  height: 10px;
+}
+#perso_vie::-moz-progress-bar {
+  background-color: red;
+  height: 10px;
+}
+#experience::-moz-progress-bar {
+  background-color: #b17b3b;
+  height: 10px;
+}
+#perso_endurance::-moz-progress-bar {
+  background-color: green;
+}
+
+.navigation {
+  border: 1px #b17b3b solid;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+}
+.navigation h2 {
+  color: #ffd230;
+  margin-bottom: 10px;
+}
+.navigation ul {
+  list-style: none;
+  padding-left: 20px;
+}
+.navigation a {
+  display: block;
+  color: white;
+  font-size: 18px;
+  width: 100%;
 }

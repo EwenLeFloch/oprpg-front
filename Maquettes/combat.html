@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>One piece rpg</title>
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <a href="/" class="logo_link"></a>
+      <img src="assets/images/op_logo.png" alt="Logo de One Piece RPG" class="logo" />
+      <img src="assets/images/rpg_logo.png" alt="" class="rpg" />
+      <nav class="nav">
+        <ul class="nav_list">
+          <li class="nav_item"><a href="#">Accueil</a></li>
+          <li class="nav_item"><a href="#">Mon profil</a></li>
+          <li class="nav_item"><a href="#">Déconnexion</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="combat_main">
+      <section class="profil">
+        <div class="profil_perso">
+          <img src="assets/images/luffy.png" />
+          <div class="profil_perso-content">
+            <p class="level">niveau 2</p>
+            <div class="perso_bar experience">
+              <p>Expérience :</p>
+              <p>3 / 4</p>
+              <progress id="experience" max="4" value="3"></progress>
+            </p>
+          </div>
+          <div class="perso_bar perso_vie">
+              <p>Vie :</p>
+              <p>18 / 20</p>
+              <progress id="perso_vie" max="20" value="18"></progress>
+          </div>
+          <div class="perso_bar perso_endurance">
+              <p>Endurance :</p>
+              <p>20 / 20</p>
+              <progress id="perso_endurance" max="20" value="20"></progress>
+          </div>
+        </div>
+        <div class="navigation">
+          <h2>Navigation</h2>
+          <ul><li><a href="#">Fuir le combat</a></li></ul>
+          
+        </div>
+      </section>
+      <section class="combat">
+        <div class="historique">
+          <h2>Historique des actions</h2>
+          <div class="historique_content">
+            <p class="historique_text historique_text-allied">
+              <em>Luffy</em> utilise l'attaque Gomu Gomu No Pistol
+            </p>
+            <p class="historique_text historique_text-allied">
+              Il inflige 2 de dégats à <strong>Higuma</strong>
+            </p>
+            <p class="historique_text historique_text-enemy">
+              <strong>Higuma</strong> utilise Fourberie
+            </p>
+            <p class="historique_text historique_text-enemy">
+              <strong>Higuma</strong> esquivera la prochaine attaque
+            </p>
+          </div>
+        </div>
+
+        <div class="ennemi">
+          <h2 id="red">Higuma</h2>
+          <div class="ennemi_content">
+            <img src="assets/images/higuma.png" />
+            <div class="status">
+              <div class="vie">
+                <p>Vie :</p>
+                <p>8 / 10 HP</p>
+                <progress id="vie" max="10" value="8"></progress>
+              </div>
+              <div class="etat">
+                <p>Etat:</p>
+                <p>Normal</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="capacites">
+          <div class="capacites_card">
+            <img src="assets/images/atk_icon.png" />
+            <div class="capacites_card-content">
+              <h2>Gomu Gomu no Pistol</h2>
+              <p>Inflige 1 à 3 dégats à l'adversaire</p>
+              <p>Endurance consommée : 2</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
