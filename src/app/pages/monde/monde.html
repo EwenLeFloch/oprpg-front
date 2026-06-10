@@ -29,7 +29,6 @@
             <h2>{{ ile.nom }}</h2>
             <p>{{ ile.description }}</p>
             <p>Niveau requis : {{ ile.niveauRequis }}</p>
-
             <h3>Zones disponibles</h3>
 
             <div class="zones-grid">
@@ -37,6 +36,7 @@
                 <article class="zone-card">
                   <h4>{{ zone.nom }}</h4>
                   <p>Niveau requis : {{ zone.niveauRequis }}</p>
+                  <a routerLink="/combat">Combat</a>
                 </article>
               }
             </div>

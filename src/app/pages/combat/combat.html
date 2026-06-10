@@ -1,1 +1,80 @@
-<p>combat works!</p>
+<main class="combat-page">
+  <section class="combat-card">
+    <h1>Combat</h1>
+
+    @if (chargement()) {
+      <p>Chargement...</p>
+    } @else {
+      @if (erreur()) {
+        <p class="error">{{ erreur() }}</p>
+      }
+
+      @if (message()) {
+        <p class="message">{{ message() }}</p>
+      }
+
+      @if (combat(); as combat) {
+        <section class="combat-current">
+          <h2>{{ combat.ennemi }}</h2>
+
+          <div class="stats">
+            <article>
+              <span>Vie ennemi</span>
+              <strong>{{ combat.vieEnnemiActuelle }}</strong>
+            </article>
+
+            <article>
+              <span>Vie joueur</span>
+              <strong>{{ combat.vieJoueurActuelle }}</strong>
+            </article>
+
+            <article>
+              <span>Statut</span>
+              <strong>{{ combat.statut }}</strong>
+            </article>
+          </div>
+
+          @if (combatActif()) {
+            <div class="actions">
+              <button type="button" [disabled]="actionEnCours()" (click)="attaquer()">
+                Attaquer
+              </button>
+
+              <button type="button" [disabled]="actionEnCours()" (click)="fuir()">Fuir</button>
+            </div>
+          }
+        </section>
+      }
+
+      @if (!combatActif()) {
+        <section class="ennemis">
+          <h2>Choisir un ennemi</h2>
+
+          <div class="ennemis-grid">
+            @for (ennemi of ennemis(); track ennemi.id) {
+              <article class="ennemi-card">
+                <h3>{{ ennemi.nom }}</h3>
+
+                <p>Vie : {{ ennemi.vieMax }}</p>
+                <p>Puissance : {{ ennemi.puissance }}</p>
+                <p>Expérience : {{ ennemi.experienceMin }} - {{ ennemi.experienceMax }}</p>
+
+                @if (ennemi.boss) {
+                  <p class="boss">Boss</p>
+                }
+
+                <button
+                  type="button"
+                  [disabled]="actionEnCours()"
+                  (click)="demarrerCombat(ennemi.id)"
+                >
+                  Combattre
+                </button>
+              </article>
+            }
+          </div>
+        </section>
+      }
+    }
+  </section>
+</main>
