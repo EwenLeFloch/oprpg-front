@@ -1,0 +1,54 @@
+<app-navbar></app-navbar>
+<main class="profil-page">
+  <section class="profil-card">
+    <h1>Profil joueur</h1>
+
+    @if (chargement()) {
+      <p>Chargement...</p>
+    } @else if (erreur()) {
+      <p class="error">{{ erreur() }}</p>
+    } @else if (progression(); as progression) {
+      <div class="character">
+        <h2>{{ progression.personnage }}</h2>
+        <p>Faction : {{ progression.faction ?? 'Non choisie' }}</p>
+      </div>
+
+      <div class="stats-grid">
+        <article>
+          <span>Niveau</span>
+          <strong>{{ progression.niveau }}</strong>
+        </article>
+
+        <article>
+          <span>Expérience</span>
+          <strong>{{ progression.experience }}</strong>
+        </article>
+
+        <article>
+          <span>Vie</span>
+          <strong>{{ progression.vieActuelle }} / {{ progression.vieMax }}</strong>
+        </article>
+
+        <article>
+          <span>Endurance</span>
+          <strong>{{ progression.enduranceActuelle }} / {{ progression.enduranceMax }}</strong>
+        </article>
+
+        <article>
+          <span>Puissance</span>
+          <strong>{{ progression.puissance }}</strong>
+        </article>
+
+        <article>
+          <span>Berries</span>
+          <strong>{{ progression.berries }}</strong>
+        </article>
+
+        <article>
+          <span>Prime</span>
+          <strong>{{ progression.prime }}</strong>
+        </article>
+      </div>
+    }
+  </section>
+</main>

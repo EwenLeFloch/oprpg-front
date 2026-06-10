@@ -1,0 +1,48 @@
+<app-navbar></app-navbar>
+<main class="monde-page">
+  <section class="monde-card">
+    <h1>Monde</h1>
+
+    @if (chargement()) {
+      <p>Chargement...</p>
+    } @else if (erreur()) {
+      <p class="error">{{ erreur() }}</p>
+    } @else {
+      <div class="layout">
+        <aside class="iles">
+          <h2>Îles</h2>
+
+          @for (ile of iles(); track ile.id) {
+            <button
+              type="button"
+              class="ile-button"
+              [class.active]="ileSelectionnee()?.id === ile.id"
+              (click)="selectionnerIle(ile)"
+            >
+              {{ ile.nom }}
+            </button>
+          }
+        </aside>
+
+        <section class="details">
+          @if (ileSelectionnee(); as ile) {
+            <h2>{{ ile.nom }}</h2>
+            <p>{{ ile.description }}</p>
+            <p>Niveau requis : {{ ile.niveauRequis }}</p>
+
+            <h3>Zones disponibles</h3>
+
+            <div class="zones-grid">
+              @for (zone of zones(); track zone.id) {
+                <article class="zone-card">
+                  <h4>{{ zone.nom }}</h4>
+                  <p>Niveau requis : {{ zone.niveauRequis }}</p>
+                </article>
+              }
+            </div>
+          }
+        </section>
+      </div>
+    }
+  </section>
+</main>

@@ -1,0 +1,16 @@
+<nav class="navbar">
+  <a routerLink="/accueil" class="logo">One Piece RPG</a>
+
+  <div class="links">
+    <a routerLink="/accueil">Accueil</a>
+
+    @if (estConnecte()) {
+      <a routerLink="/monde">Monde</a>
+      <a routerLink="/profil">Profil</a>
+      <button type="button" (click)="deconnecter()">Déconnexion</button>
+    } @else {
+      <a routerLink="/connexion">Connexion</a>
+      <a routerLink="/inscription">Inscription</a>
+    }
+  </div>
+</nav>

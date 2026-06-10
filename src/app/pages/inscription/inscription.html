@@ -1,0 +1,30 @@
+<app-navbar></app-navbar>
+<main class="auth-page">
+  <section class="auth-card">
+    <h1>Inscription</h1>
+
+    <form (ngSubmit)="inscrire()">
+      <label for="pseudo">Pseudo</label>
+      <input id="pseudo" name="pseudo" [(ngModel)]="pseudo" required />
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" [(ngModel)]="email" required />
+
+      <label for="motDePasse">Mot de passe</label>
+      <input id="password" name="motDePasse" type="password" [(ngModel)]="motDePasse" required />
+
+      @if (erreur()) {
+        <p class="error">{{ erreur() }}</p>
+      }
+
+      <button type="submit" [disabled]="chargement()">
+        {{ chargement() ? 'Inscription...' : 'Créer mon compte' }}
+      </button>
+    </form>
+
+    <p class="auth-link">
+      Déjà inscrit ?
+      <a routerLink="/connexion">Se connecter</a>
+    </p>
+  </section>
+</main>
