@@ -34,13 +34,40 @@
             </article>
           </div>
 
-          @if (combatActif()) {
-            <div class="actions">
-              <button type="button" [disabled]="actionEnCours()" (click)="attaquer()">
-                Attaquer
-              </button>
+          @if (combat.recompense) {
+            <div class="reward-card">
+              <h3>Récompense</h3>
+              <p>+{{ combat.recompense.experience }} XP</p>
+            </div>
+          }
 
-              <button type="button" [disabled]="actionEnCours()" (click)="fuir()">Fuir</button>
+          @if (combatActif()) {
+            <div class="capacites">
+              <h3>Capacites disponibles</h3>
+
+              <div class="capacites-grid">
+                @for (capacite of capacites(); track capacite.id) {
+                  <button
+                    type="button"
+                    class="capacite-button"
+                    [disabled]="actionEnCours()"
+                    (click)="utiliserCapacite(capacite)"
+                  >
+                    <strong>{{ capacite.nom }}</strong>
+                    <span>{{ capacite.typeCapacite }}</span>
+                    <small>Endurance : {{ capacite.coutEndurance }}</small>
+                  </button>
+                }
+              </div>
+
+              <button
+                type="button"
+                class="fuite-button"
+                [disabled]="actionEnCours()"
+                (click)="fuir()"
+              >
+                Fuir
+              </button>
             </div>
           }
         </section>

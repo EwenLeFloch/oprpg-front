@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 
 import { CombatResponse, CombatService, Ennemi } from '../../core/services/combat';
+import { Capacite, CapaciteService } from '../../core/services/capacite';
 
 @Component({
   selector: 'app-combat',
@@ -9,8 +10,10 @@ import { CombatResponse, CombatService, Ennemi } from '../../core/services/comba
 })
 export class Combat {
   private readonly combatService = inject(CombatService);
+  private readonly capaciteService = inject(CapaciteService);
 
   ennemis = signal<Ennemi[]>([]);
+  capacites = signal<Capacite[]>([]);
   combat = signal<CombatResponse | null>(null);
 
   chargement = signal(true);
@@ -20,6 +23,7 @@ export class Combat {
 
   constructor() {
     this.recupererEnnemis();
+    this.recupererCapacites();
     this.recupererCombatEnCours();
   }
 
@@ -33,6 +37,13 @@ export class Combat {
         this.erreur.set('Impossible de récupérer les ennemis.');
         this.chargement.set(false);
       },
+    });
+  }
+
+  recupererCapacites(): void {
+    this.capaciteService.recupererCapacitesPersonnage().subscribe({
+      next: (capacites) => this.capacites.set(capacites),
+      error: () => this.erreur.set('Impossible de récupérer les capacites.'),
     });
   }
 
@@ -61,19 +72,15 @@ export class Combat {
     });
   }
 
-  attaquer(): void {
-    this.utiliserMove(1);
-  }
-
-  utiliserMove(moveId: number): void {
+  utiliserCapacite(capacite: Capacite): void {
     this.actionEnCours.set(true);
     this.message.set(null);
     this.erreur.set(null);
 
-    this.combatService.utiliserMove(moveId).subscribe({
+    this.combatService.utiliserCapacite(capacite.id).subscribe({
       next: (combat) => {
         this.combat.set(combat);
-        this.message.set(this.messageCombat(combat));
+        this.message.set(this.messageCombat(combat, capacite.nom));
         this.actionEnCours.set(false);
 
         if (combat.statut !== 'EN_COURS') {
@@ -81,7 +88,7 @@ export class Combat {
         }
       },
       error: (error) => {
-        this.erreur.set(error?.error?.message ?? 'Impossible d’utiliser ce move.');
+        this.erreur.set(error?.error?.message ?? 'Impossible d’utiliser ce capacite.');
         this.actionEnCours.set(false);
       },
     });
@@ -109,15 +116,15 @@ export class Combat {
     return this.combat()?.statut === 'EN_COURS';
   }
 
-  private messageCombat(combat: CombatResponse): string {
+  private messageCombat(combat: CombatResponse, capaciteNom: string): string {
     if (combat.statut === 'VICTOIRE') {
-      return `Victoire contre ${combat.ennemi} !`;
+      return `Victoire contre ${combat.ennemi} ! +${combat.recompense?.experience} XP`;
     }
 
     if (combat.statut === 'DEFAITE') {
       return `Défaite contre ${combat.ennemi}.`;
     }
 
-    return `Vous attaquez ${combat.ennemi}.`;
+    return `Vous utilisez ${capaciteNom} contre ${combat.ennemi}.`;
   }
 }

@@ -22,6 +22,9 @@ export interface CombatResponse {
   vieEnnemiActuelle: number;
   vieJoueurActuelle: number;
   statut: 'EN_COURS' | 'VICTOIRE' | 'DEFAITE' | 'FUITE';
+  recompense: {
+    experience: number;
+  } | null;
 }
 
 @Injectable({
@@ -42,8 +45,8 @@ export class CombatService {
     return this.http.post<CombatResponse>(`${API_BASE_URL}/combats/ennemis/${ennemiId}`, {});
   }
 
-  utiliserMove(moveId: number): Observable<CombatResponse> {
-    return this.http.post<CombatResponse>(`${API_BASE_URL}/combats/moves/${moveId}`, {});
+  utiliserCapacite(capaciteId: number): Observable<CombatResponse> {
+    return this.http.post<CombatResponse>(`${API_BASE_URL}/combats/capacites/${capaciteId}`, {});
   }
 
   fuirCombat(): Observable<CombatResponse> {
