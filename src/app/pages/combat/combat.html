@@ -28,6 +28,10 @@
               <strong>{{ combat.vieJoueurActuelle }}</strong>
             </article>
             <article>
+              <span>Endurance</span>
+              <strong>{{ combat.enduranceActuelle }}</strong>
+            </article>
+            <article>
               <span>Statut</span>
               <strong>{{ combat.statut }}</strong>
             </article>
@@ -87,16 +91,24 @@
               <button type="button" class="btn-retour" (click)="retourIle()">
                 Retourner sur l'île
               </button>
+              <button type="button" class="btn-auberge" (click)="allerAuberge()">
+                Aller à l'auberge
+              </button>
             </div>
           } @else {
-            <button
-              type="button"
-              class="btn-lancer"
-              [disabled]="actionEnCours()"
-              (click)="lancerCombat()"
-            >
-              Lancer un combat
-            </button>
+            <div class="choix-post-combat">
+              <button
+                type="button"
+                class="btn-lancer"
+                [disabled]="actionEnCours()"
+                (click)="lancerCombat()"
+              >
+                Lancer un combat
+              </button>
+              <button type="button" class="btn-auberge" (click)="allerAuberge()">
+                Aller à l'auberge
+              </button>
+            </div>
           }
         </section>
       }

@@ -40,6 +40,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/combat/combat').then((m) => m.Combat),
   },
   {
+    path: 'auberge',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/auberge/auberge').then((m) => m.Auberge),
+  },
+  {
     path: '**',
     redirectTo: 'accueil',
   },

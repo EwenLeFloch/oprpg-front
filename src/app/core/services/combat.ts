@@ -9,6 +9,7 @@ export interface CombatResponse {
   ennemi: string;
   vieEnnemiActuelle: number;
   vieJoueurActuelle: number;
+  enduranceActuelle: number;
   statut: 'EN_COURS' | 'VICTOIRE' | 'DEFAITE' | 'FUITE';
   recompense: {
     experience: number;

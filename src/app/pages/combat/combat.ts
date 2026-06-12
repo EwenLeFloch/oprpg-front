@@ -125,6 +125,10 @@ export class Combat {
     this.lancerCombat();
   }
 
+  allerAuberge(): void {
+    this.router.navigate(['/auberge']);
+  }
+
   retourIle(): void {
     this.router.navigate(['/monde']);
   }
