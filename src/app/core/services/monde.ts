@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { API_BASE_URL } from '../config/api.config';
 
-export interface Ile {
+export interface IleData {
   id: number;
   nom: string;
   imagePath: string;
@@ -26,12 +26,12 @@ export interface Zone {
 export class MondeService {
   private readonly http = inject(HttpClient);
 
-  recupererIles(): Observable<Ile[]> {
-    return this.http.get<Ile[]>(`${API_BASE_URL}/iles`);
+  recupererIles(): Observable<IleData[]> {
+    return this.http.get<IleData[]>(`${API_BASE_URL}/iles`);
   }
 
-  recupererIleParId(ileId: number): Observable<Ile> {
-    return this.http.get<Ile>(`${API_BASE_URL}/iles/${ileId}`);
+  recupererIleParId(ileId: number): Observable<IleData> {
+    return this.http.get<IleData>(`${API_BASE_URL}/iles/${ileId}`);
   }
 
   recupererZonesParIle(ileId: number): Observable<Zone[]> {

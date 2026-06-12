@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { Ile, MondeService } from '../../core/services/monde';
+import { IleData, MondeService } from '../../core/services/monde';
 import { Navbar } from '../../shared/components/navbar/navbar';
 
 @Component({
@@ -14,7 +14,7 @@ export class Monde {
   private readonly mondeService = inject(MondeService);
   private readonly router = inject(Router);
 
-  iles = signal<Ile[]>([]);
+  iles = signal<IleData[]>([]);
   chargement = signal(true);
   erreur = signal<string | null>(null);
 
@@ -31,7 +31,7 @@ export class Monde {
     });
   }
 
-  allerVersIle(ile: Ile): void {
+  allerVersIle(ile: IleData): void {
     this.router.navigate(['/ile', ile.id]);
   }
 }
