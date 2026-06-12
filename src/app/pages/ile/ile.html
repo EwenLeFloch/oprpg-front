@@ -1,0 +1,37 @@
+<app-navbar></app-navbar>
+<main class="ile-page">
+  @if (chargement()) {
+    <p class="chargement">Chargement...</p>
+  } @else if (erreur()) {
+    <p class="error">{{ erreur() }}</p>
+  } @else if (ile(); as ile) {
+    <section class="ile-hero">
+      <img [src]="ile.imagePath" [alt]="ile.nom" class="ile-image" />
+      <div class="ile-titre">
+        <button type="button" class="btn-retour" (click)="retourMonde()">← Monde</button>
+        <h1>{{ ile.nom }}</h1>
+        <p class="niveau-requis">Niveau requis : {{ ile.niveauRequis }}</p>
+      </div>
+    </section>
+
+    <section class="zones-section">
+      <h2>Zones</h2>
+
+      @if (zones().length === 0) {
+        <p>Aucune zone disponible sur cette île.</p>
+      } @else {
+        <div class="zones-grid">
+          @for (zone of zones(); track zone.id) {
+            <article class="zone-card">
+              <h3>{{ zone.nom }}</h3>
+              <p>Niveau requis : {{ zone.niveauRequis }}</p>
+              <button type="button" class="btn-combat" (click)="allerAuCombat(zone)">
+                Combattre
+              </button>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  }
+</main>

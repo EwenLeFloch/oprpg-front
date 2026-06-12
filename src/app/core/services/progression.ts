@@ -17,6 +17,7 @@ export interface ProgressionJoueur {
   prime: number;
   personnage: string;
   faction: string | null;
+  zoneId: number;
 }
 
 @Injectable({

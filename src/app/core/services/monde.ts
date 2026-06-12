@@ -30,6 +30,10 @@ export class MondeService {
     return this.http.get<Ile[]>(`${API_BASE_URL}/iles`);
   }
 
+  recupererIleParId(ileId: number): Observable<Ile> {
+    return this.http.get<Ile>(`${API_BASE_URL}/iles/${ileId}`);
+  }
+
   recupererZonesParIle(ileId: number): Observable<Zone[]> {
     return this.http.get<Zone[]>(`${API_BASE_URL}/zones/ile/${ileId}`);
   }

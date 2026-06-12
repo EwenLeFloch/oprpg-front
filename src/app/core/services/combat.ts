@@ -4,18 +4,6 @@ import { Observable } from 'rxjs';
 
 import { API_BASE_URL } from '../config/api.config';
 
-export interface Ennemi {
-  id: number;
-  nom: string;
-  vieMax: number;
-  puissance: number;
-  experienceMin: number;
-  experienceMax: number;
-  boss: boolean;
-  zoneId: number;
-  zoneNom: string;
-}
-
 export interface CombatResponse {
   combatId: number;
   ennemi: string;
@@ -24,6 +12,7 @@ export interface CombatResponse {
   statut: 'EN_COURS' | 'VICTOIRE' | 'DEFAITE' | 'FUITE';
   recompense: {
     experience: number;
+    prime: number;
   } | null;
 }
 
@@ -33,16 +22,12 @@ export interface CombatResponse {
 export class CombatService {
   private readonly http = inject(HttpClient);
 
-  recupererEnnemisParZone(zoneId: number): Observable<Ennemi[]> {
-    return this.http.get<Ennemi[]>(`${API_BASE_URL}/ennemis/zone/${zoneId}`);
+  demarrerCombatZone(zoneId: number): Observable<CombatResponse> {
+    return this.http.post<CombatResponse>(`${API_BASE_URL}/combats/zones/${zoneId}`, {});
   }
 
   recupererCombatEnCours(): Observable<CombatResponse> {
     return this.http.get<CombatResponse>(`${API_BASE_URL}/combats/en-cours`);
-  }
-
-  demarrerCombat(ennemiId: number): Observable<CombatResponse> {
-    return this.http.post<CombatResponse>(`${API_BASE_URL}/combats/ennemis/${ennemiId}`, {});
   }
 
   utiliserCapacite(capaciteId: number): Observable<CombatResponse> {

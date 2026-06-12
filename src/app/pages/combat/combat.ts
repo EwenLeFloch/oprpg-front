@@ -1,18 +1,24 @@
 import { Component, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { CombatResponse, CombatService, Ennemi } from '../../core/services/combat';
+import { CombatResponse, CombatService } from '../../core/services/combat';
 import { Capacite, CapaciteService } from '../../core/services/capacite';
+import { Navbar } from '../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-combat',
   templateUrl: './combat.html',
   styleUrl: './combat.scss',
+  imports: [Navbar],
 })
 export class Combat {
   private readonly combatService = inject(CombatService);
   private readonly capaciteService = inject(CapaciteService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
-  ennemis = signal<Ennemi[]>([]);
+  private readonly zoneId: number = Number(this.route.snapshot.paramMap.get('zoneId'));
+
   capacites = signal<Capacite[]>([]);
   combat = signal<CombatResponse | null>(null);
 
@@ -20,49 +26,48 @@ export class Combat {
   actionEnCours = signal(false);
   message = signal<string | null>(null);
   erreur = signal<string | null>(null);
+  apresDefaiteOuFuite = signal(false);
 
   constructor() {
-    this.recupererEnnemis();
     this.recupererCapacites();
     this.recupererCombatEnCours();
   }
 
-  recupererEnnemis(): void {
-    this.combatService.recupererEnnemisParZone(1).subscribe({
-      next: (ennemis) => {
-        this.ennemis.set(ennemis);
+  recupererCapacites(): void {
+    this.capaciteService.recupererCapacitesPersonnage().subscribe({
+      next: (capacites) => {
+        this.capacites.set(capacites);
         this.chargement.set(false);
       },
       error: () => {
-        this.erreur.set('Impossible de récupérer les ennemis.');
+        this.erreur.set('Impossible de récupérer les capacités.');
         this.chargement.set(false);
       },
-    });
-  }
-
-  recupererCapacites(): void {
-    this.capaciteService.recupererCapacitesPersonnage().subscribe({
-      next: (capacites) => this.capacites.set(capacites),
-      error: () => this.erreur.set('Impossible de récupérer les capacites.'),
     });
   }
 
   recupererCombatEnCours(): void {
     this.combatService.recupererCombatEnCours().subscribe({
-      next: (combat) => this.combat.set(combat),
+      next: (combat) => {
+        this.combat.set(combat);
+        if (combat.statut !== 'EN_COURS') {
+          this.apresDefaiteOuFuite.set(true);
+        }
+      },
       error: () => this.combat.set(null),
     });
   }
 
-  demarrerCombat(ennemiId: number): void {
+  lancerCombat(): void {
     this.actionEnCours.set(true);
     this.message.set(null);
     this.erreur.set(null);
+    this.apresDefaiteOuFuite.set(false);
 
-    this.combatService.demarrerCombat(ennemiId).subscribe({
+    this.combatService.demarrerCombatZone(this.zoneId).subscribe({
       next: (combat) => {
         this.combat.set(combat);
-        this.message.set(`Combat démarré contre ${combat.ennemi}.`);
+        this.message.set(`Combat engagé contre ${combat.ennemi} !`);
         this.actionEnCours.set(false);
       },
       error: (error) => {
@@ -84,11 +89,11 @@ export class Combat {
         this.actionEnCours.set(false);
 
         if (combat.statut !== 'EN_COURS') {
-          this.recupererEnnemis();
+          this.apresDefaiteOuFuite.set(true);
         }
       },
       error: (error) => {
-        this.erreur.set(error?.error?.message ?? 'Impossible d’utiliser ce capacite.');
+        this.erreur.set(error?.error?.message ?? "Impossible d'utiliser cette capacité.");
         this.actionEnCours.set(false);
       },
     });
@@ -104,6 +109,7 @@ export class Combat {
         this.combat.set(combat);
         this.message.set('Vous avez fui le combat.');
         this.actionEnCours.set(false);
+        this.apresDefaiteOuFuite.set(true);
       },
       error: (error) => {
         this.erreur.set(error?.error?.message ?? 'Impossible de fuir.');
@@ -112,19 +118,29 @@ export class Combat {
     });
   }
 
+  relancerCombat(): void {
+    this.combat.set(null);
+    this.apresDefaiteOuFuite.set(false);
+    this.message.set(null);
+    this.lancerCombat();
+  }
+
+  retourIle(): void {
+    this.router.navigate(['/monde']);
+  }
+
   combatActif(): boolean {
     return this.combat()?.statut === 'EN_COURS';
   }
 
   private messageCombat(combat: CombatResponse, capaciteNom: string): string {
     if (combat.statut === 'VICTOIRE') {
-      return `Victoire contre ${combat.ennemi} ! +${combat.recompense?.experience} XP`;
+      const r = combat.recompense;
+      return `Victoire contre ${combat.ennemi} ! +${r?.experience} XP, +${r?.prime} Prime`;
     }
-
     if (combat.statut === 'DEFAITE') {
       return `Défaite contre ${combat.ennemi}.`;
     }
-
     return `Vous utilisez ${capaciteNom} contre ${combat.ennemi}.`;
   }
 }

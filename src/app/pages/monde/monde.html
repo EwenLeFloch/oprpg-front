@@ -8,40 +8,16 @@
     } @else if (erreur()) {
       <p class="error">{{ erreur() }}</p>
     } @else {
-      <div class="layout">
-        <aside class="iles">
-          <h2>Îles</h2>
-
-          @for (ile of iles(); track ile.id) {
-            <button
-              type="button"
-              class="ile-button"
-              [class.active]="ileSelectionnee()?.id === ile.id"
-              (click)="selectionnerIle(ile)"
-            >
-              {{ ile.nom }}
-            </button>
-          }
-        </aside>
-
-        <section class="details">
-          @if (ileSelectionnee(); as ile) {
-            <h2>{{ ile.nom }}</h2>
-            <p>{{ ile.description }}</p>
-            <p>Niveau requis : {{ ile.niveauRequis }}</p>
-            <h3>Zones disponibles</h3>
-
-            <div class="zones-grid">
-              @for (zone of zones(); track zone.id) {
-                <article class="zone-card">
-                  <h4>{{ zone.nom }}</h4>
-                  <p>Niveau requis : {{ zone.niveauRequis }}</p>
-                  <a routerLink="/combat">Combat</a>
-                </article>
-              }
+      <div class="iles-grid">
+        @for (ile of iles(); track ile.id) {
+          <article class="ile-card" (click)="allerVersIle(ile)">
+            <img [src]="ile.imagePath" [alt]="ile.nom" class="ile-image" />
+            <div class="ile-info">
+              <h2>{{ ile.nom }}</h2>
+              <p>Niveau requis : {{ ile.niveauRequis }}</p>
             </div>
-          }
-        </section>
+          </article>
+        }
       </div>
     }
   </section>

@@ -6,7 +6,11 @@
 
     @if (estConnecte()) {
       <a routerLink="/monde">Monde</a>
-      <a routerLink="/combat">Combat</a>
+
+      @if (zoneId()) {
+        <a [routerLink]="['/combat', zoneId()]">Combat</a>
+      }
+
       <a routerLink="/profil">Profil</a>
       <button type="button" (click)="deconnecter()">Déconnexion</button>
     } @else {

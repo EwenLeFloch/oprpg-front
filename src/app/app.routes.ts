@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-
 import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
@@ -31,7 +30,12 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/monde/monde').then((m) => m.Monde),
   },
   {
-    path: 'combat',
+    path: 'ile/:ileId',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/ile/ile').then((m) => m.Ile),
+  },
+  {
+    path: 'combat/:zoneId',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/combat/combat').then((m) => m.Combat),
   },
