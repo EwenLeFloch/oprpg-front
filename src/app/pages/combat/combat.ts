@@ -88,6 +88,11 @@ export class Combat {
         this.message.set(this.messageCombat(combat, capacite.nom));
         this.actionEnCours.set(false);
 
+        if (combat.statut === 'VICTOIRE' && combat.factionsDebloquees) {
+          this.router.navigate(['/faction']);
+          return;
+        }
+
         if (combat.statut !== 'EN_COURS') {
           this.apresDefaiteOuFuite.set(true);
         }
@@ -125,12 +130,12 @@ export class Combat {
     this.lancerCombat();
   }
 
-  allerAuberge(): void {
-    this.router.navigate(['/auberge']);
-  }
-
   retourIle(): void {
     this.router.navigate(['/monde']);
+  }
+
+  allerAuberge(): void {
+    this.router.navigate(['/auberge']);
   }
 
   combatActif(): boolean {

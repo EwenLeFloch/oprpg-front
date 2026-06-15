@@ -10,6 +10,8 @@ export interface CombatResponse {
   vieEnnemiActuelle: number;
   vieJoueurActuelle: number;
   enduranceActuelle: number;
+  bossVaincu: boolean;
+  factionsDebloquees: boolean;
   statut: 'EN_COURS' | 'VICTOIRE' | 'DEFAITE' | 'FUITE';
   recompense: {
     experience: number;

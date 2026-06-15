@@ -1,0 +1,34 @@
+<app-navbar></app-navbar>
+<main class="auberge-page">
+  <section class="auberge-card">
+    <h1>Auberge</h1>
+
+    @if (chargement()) {
+      <p>Chargement...</p>
+    } @else if (erreur()) {
+      <p class="error">{{ erreur() }}</p>
+    } @else if (progression(); as progression) {
+      <p class="intro">Vous vous installez confortablement pour récupérer des forces.</p>
+
+      <div class="endurance-display">
+        <span>Endurance</span>
+        <strong>{{ progression.enduranceActuelle }} / {{ progression.enduranceMax }}</strong>
+      </div>
+
+      @if (enduranceComplete()) {
+        <p class="message">Vous êtes en pleine forme.</p>
+        <button type="button" class="btn-combat" (click)="allerCombattre()">Aller combattre</button>
+      } @else {
+        <button type="button" class="btn-repos" [disabled]="reposEnCours()" (click)="seReposer()">
+          Se reposer
+        </button>
+
+        @if (reposEffectue()) {
+          <button type="button" class="btn-combat" (click)="allerCombattre()">
+            Aller combattre
+          </button>
+        }
+      }
+    }
+  </section>
+</main>

@@ -1,0 +1,29 @@
+<app-navbar></app-navbar>
+<main class="faction-page">
+  <section class="faction-card">
+    <h1>Choisissez votre voie</h1>
+    <p class="intro">
+      Higuma a été vaincu. Votre légende commence maintenant. Ce choix est définitif.
+    </p>
+
+    @if (chargement()) {
+      <p>Chargement...</p>
+    } @else if (erreur()) {
+      <p class="error">{{ erreur() }}</p>
+    } @else {
+      <div class="factions-grid">
+        @for (faction of factions(); track faction.id) {
+          <button
+            type="button"
+            class="faction-option"
+            [disabled]="envoiEnCours()"
+            (click)="choisirFaction(faction)"
+          >
+            <h2>{{ faction.nom }}</h2>
+            <p>{{ faction.description }}</p>
+          </button>
+        }
+      </div>
+    }
+  </section>
+</main>

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth-guard';
+import { factionGuard } from './core/guards/faction-guard';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,11 @@ export const routes: Routes = [
     path: 'combat/:zoneId',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/combat/combat').then((m) => m.Combat),
+  },
+  {
+    path: 'faction',
+    canActivate: [authGuard, factionGuard],
+    loadComponent: () => import('./pages/faction/faction').then((m) => m.FactionPage),
   },
   {
     path: 'auberge',

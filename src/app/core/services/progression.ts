@@ -25,9 +25,12 @@ export interface ProgressionJoueur {
 })
 export class ProgressionService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${API_BASE_URL}/progression`;
 
   recupererMaProgression(): Observable<ProgressionJoueur> {
-    return this.http.get<ProgressionJoueur>(`${this.apiUrl}/me`);
+    return this.http.get<ProgressionJoueur>(`${API_BASE_URL}/progression/me`);
+  }
+
+  seReposer(): Observable<ProgressionJoueur> {
+    return this.http.post<ProgressionJoueur>(`${API_BASE_URL}/progression/repos`, {});
   }
 }
