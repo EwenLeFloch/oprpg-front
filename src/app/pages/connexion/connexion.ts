@@ -1,13 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { Auth } from '../../core/services/auth';
 import { Navbar } from '../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-connexion',
-  imports: [FormsModule, Navbar],
+  imports: [FormsModule, Navbar, RouterLink],
   templateUrl: './connexion.html',
   styleUrl: './connexion.scss',
 })
@@ -15,19 +15,42 @@ export class Connexion {
   private readonly auth = inject(Auth);
   private readonly router = inject(Router);
 
-  email = '';
+  identifiant = '';
   motDePasse = '';
 
-  erreur = signal<string | null>(null);
+  erreurIdentifiant = signal<string | null>(null);
+  erreurMotDePasse = signal<string | null>(null);
+  erreurServeur = signal<string | null>(null);
   chargement = signal(false);
 
-  connecter(): void {
-    this.erreur.set(null);
-    this.chargement.set(true);
+  validerIdentifiant(): void {
+    this.erreurIdentifiant.set(
+      this.identifiant.trim().length < 3
+        ? "L'identifiant doit contenir au moins 3 caractères."
+        : null,
+    );
+  }
 
+  validerMotDePasse(): void {
+    this.erreurMotDePasse.set(
+      this.motDePasse.length === 0 ? 'Le mot de passe est obligatoire.' : null,
+    );
+  }
+
+  private formulaireValide(): boolean {
+    this.validerIdentifiant();
+    this.validerMotDePasse();
+    return !this.erreurIdentifiant() && !this.erreurMotDePasse();
+  }
+
+  connecter(): void {
+    this.erreurServeur.set(null);
+    if (!this.formulaireValide()) return;
+
+    this.chargement.set(true);
     this.auth
       .connecter({
-        email: this.email,
+        identifiant: this.identifiant,
         motDePasse: this.motDePasse,
       })
       .subscribe({
@@ -37,7 +60,7 @@ export class Connexion {
         },
         error: () => {
           this.chargement.set(false);
-          this.erreur.set('Email ou mot de passe incorrect.');
+          this.erreurServeur.set('Identifiant ou mot de passe incorrect.');
         },
       });
   }

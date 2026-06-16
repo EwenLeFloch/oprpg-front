@@ -1,40 +1,41 @@
+@use '../styles/index' as *;
+
 .auth-page {
-  min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: center;
-  background: #121212;
-  color: #f5f5f5;
-  padding: 2rem;
+  color: white;
 }
 
 .auth-card {
   width: 100%;
   max-width: 420px;
   padding: 2rem;
-  border: 1px solid #b17b3b;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid $color-gold;
+  border-radius: $border-radius-section;
+  background: $color-card-bg;
 }
 
 h1 {
   margin-bottom: 1.5rem;
   text-align: center;
-  color: #ffd230;
+  color: $color-accent;
 }
 
 form {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 input {
   padding: 0.8rem;
-  border: 1px solid #b17b3b;
+  border: 1px solid $color-gold;
+  background-color: rgba(255, 255, 255, 0.5);
   border-radius: 8px;
-  background: #1f1f1f;
-  color: #fff;
+  text-shadow: none;
 }
 
 button {
@@ -42,8 +43,10 @@ button {
   padding: 0.9rem;
   border: none;
   border-radius: 8px;
-  background: #ffd230;
+  background: $color-accent;
   color: #121212;
+  text-shadow: none;
+
   font-weight: bold;
   cursor: pointer;
 }
@@ -56,6 +59,7 @@ button:disabled {
 .error {
   color: #ff6b6b;
   font-size: 0.9rem;
+  font-weight: normal;
 }
 
 .auth-link {
@@ -64,5 +68,5 @@ button:disabled {
 }
 
 a {
-  color: #ffd230;
+  color: $color-accent;
 }

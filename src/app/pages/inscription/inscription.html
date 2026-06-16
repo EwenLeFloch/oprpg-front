@@ -5,16 +5,52 @@
 
     <form (ngSubmit)="inscrire()">
       <label for="pseudo">Pseudo</label>
-      <input id="pseudo" name="pseudo" [(ngModel)]="pseudo" required />
+      <input id="pseudo" name="pseudo" [(ngModel)]="pseudo" (input)="validerPseudo()" required />
+      @if (erreurPseudo()) {
+        <p class="error">{{ erreurPseudo() }}</p>
+      }
 
       <label for="email">Email</label>
-      <input id="email" name="email" type="email" [(ngModel)]="email" required />
+      <input
+        id="email"
+        name="email"
+        type="email"
+        [(ngModel)]="email"
+        (input)="validerEmail()"
+        required
+      />
+      @if (erreurEmail()) {
+        <p class="error">{{ erreurEmail() }}</p>
+      }
 
       <label for="motDePasse">Mot de passe</label>
-      <input id="password" name="motDePasse" type="password" [(ngModel)]="motDePasse" required />
+      <input
+        id="motDePasse"
+        name="motDePasse"
+        type="password"
+        [(ngModel)]="motDePasse"
+        (input)="validerMotDePasse()"
+        required
+      />
+      @if (erreurMotDePasse()) {
+        <p class="error">{{ erreurMotDePasse() }}</p>
+      }
 
-      @if (erreur()) {
-        <p class="error">{{ erreur() }}</p>
+      <label for="confirmationMotDePasse">Confirmation du mot de passe</label>
+      <input
+        id="confirmationMotDePasse"
+        name="confirmationMotDePasse"
+        type="password"
+        [(ngModel)]="confirmationMotDePasse"
+        (input)="validerConfirmation()"
+        required
+      />
+      @if (erreurConfirmation()) {
+        <p class="error">{{ erreurConfirmation() }}</p>
+      }
+
+      @if (erreurServeur()) {
+        <p class="error">{{ erreurServeur() }}</p>
       }
 
       <button type="submit" [disabled]="chargement()">

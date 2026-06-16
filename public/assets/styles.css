@@ -1,0 +1,452 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  background-image: url('../assets/images/background.gif');
+  background-size: cover;
+  background-position: center;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  justify-content: flex-start;
+}
+@font-face {
+  font-family: 'Anime';
+  src: url('../assets/fonts/animeace2bb_tt/animeace2_reg.ttf') format('truetype');
+}
+.header {
+  position: relative;
+  border-radius: 10px;
+  height: 80px;
+  background-image: url('../assets/images/oprpg_header.png');
+  background-size: cover;
+  background-position-y: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  box-shadow: 5px 5px 15px 5px #000000;
+}
+.logo {
+  height: 80%;
+  position: relative;
+}
+.logo_link {
+  position: absolute;
+  top: 0;
+  left: 40px;
+  width: 200px;
+  height: 100%;
+  z-index: 1;
+}
+.rpg {
+  position: absolute;
+  top: 75%;
+  left: 120px;
+  height: 70%;
+}
+.nav {
+  height: 100%;
+}
+.nav_list {
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  height: 100%;
+}
+.nav_item {
+  color: black;
+  cursor: pointer;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.nav_item a {
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  font-family: 'Anime', 'Arial';
+  -webkit-text-stroke: 0.5px black;
+  height: 100%;
+  width: 100%;
+  text-shadow: 2px 2px 2px black;
+}
+
+.home_main {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+.presentation {
+  width: 100%;
+  border-radius: 10px;
+  font-size: 18px;
+  text-align: justify;
+  border: 10px solid #b17b3b;
+  background-image: url(../assets/images/oprpg_presentation.webp);
+  background-size: cover;
+  background-position: center bottom;
+  padding: 80px 80px 20px 80px;
+}
+.presentation_content,
+.actualites_content {
+  width: 50%;
+  color: white;
+}
+.presentation_content h1,
+.actualites h1 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  color: #ffd230;
+}
+
+.presentation_aside {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.presentation_card {
+  margin-top: 50px;
+  width: 30%;
+  min-width: 400px;
+  height: 100px;
+  vertical-align: middle;
+  color: white;
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 10px;
+  border: 1px solid #b17b3b;
+  font-size: 16px;
+}
+.presentation_card h2 {
+  font-size: 22px;
+  color: #ffd230;
+  margin-bottom: 10px;
+}
+.presentation_icon {
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  float: left;
+  margin-right: 20px;
+}
+
+.actualites {
+  width: 100%;
+  border-radius: 10px;
+  font-size: 18px;
+  text-align: justify;
+  border: 10px solid #b17b3b;
+  background-image: url(../assets/images/oprpg_news_bg.jpg);
+  background-size: cover;
+  background-position: center bottom;
+  padding: 80px 80px 20px 80px;
+  position: relative;
+  z-index: -2;
+}
+
+.actualites::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: block;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: -1;
+}
+
+.actualites_content {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+}
+
+.actualites_card {
+  padding: 20px;
+  width: 100%;
+  min-width: 400px;
+  vertical-align: middle;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  border: 1px solid #b17b3b;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  text-align: justify;
+}
+.actualites_card-title {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
+.actualites_card-title button {
+  padding: 0 20px;
+  height: 25px;
+  background-color: red;
+  border: none;
+  outline: none;
+  border-radius: 50px;
+  box-shadow: 5px 5px 15px 5px #000000;
+}
+.actualites h2 {
+  color: #ffd230;
+}
+.date {
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 12px;
+}
+
+.combat_main {
+  display: flex;
+  gap: 20px;
+}
+.combat {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.historique,
+.ennemi {
+  width: 100%;
+  max-width: calc(50% - 10px);
+  height: 300px;
+  border-radius: 10px;
+  border: 1px #b17b3b solid;
+  padding: 20px;
+
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+.historique h2,
+.ennemi h2 {
+  color: #ffd230;
+  font-family: 'Anime';
+}
+.historique_content {
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px #b17b3b solid;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.4);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.historique_text {
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  line-height: 20px;
+  color: white;
+  border-radius: 5px;
+}
+.historique_text-allied::before {
+  float: left;
+  margin-right: 5px;
+  content: '';
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background-color: #ffd230;
+  border-radius: 5px 0 0 5px;
+}
+.historique_text-enemy::before {
+  margin-right: 5px;
+  float: left;
+  content: '';
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  background-color: red;
+  border-radius: 5px 0 0 5px;
+}
+.historique_text em {
+  font-weight: bold;
+  font-style: normal;
+  color: #ffd230;
+}
+.historique_text strong {
+  color: red;
+}
+
+#red {
+  color: red;
+}
+
+.ennemi_content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+  justify-self: center;
+  gap: 20px;
+}
+.ennemi_content img {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  align-self: center;
+}
+.status {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+}
+.etat {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-weight: bold;
+}
+.vie {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.vie p {
+  color: white;
+  font-weight: bold;
+}
+#vie {
+  width: 100%;
+  border-radius: 8px;
+  height: 15px;
+  flex-grow: 0;
+}
+#vie::-moz-progress-bar {
+  background-color: red;
+}
+
+.capacites {
+  height: 100%;
+  max-height: 50%;
+}
+.capacites_card {
+  display: flex;
+  gap: 10px;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  border: 1px #b17b3b solid;
+  border-radius: 10px;
+  color: white;
+}
+.capacites_card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.capacites_card-content h2 {
+  color: #ffd230;
+}
+.capacites_card img {
+  height: 80px;
+  align-self: center;
+}
+.profil {
+  min-width: 250px;
+  flex-shrink: 0;
+  border: 1px #b17b3b solid;
+  background-color: rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border-radius: 10px;
+}
+.profil_perso {
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+.profil_perso-content {
+  padding: 10px;
+}
+.profil_perso img {
+  height: 80px;
+  width: 80px;
+  border-radius: 10px;
+  border: 5px #b17b3b solid;
+  align-self: center;
+}
+.level {
+  text-align: center;
+  color: greenyellow;
+  font-weight: bold;
+}
+.perso_bar {
+  margin-top: 15px;
+  font-size: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: space-between;
+}
+.profil_perso progress {
+  width: 100%;
+  border-radius: 5px;
+  height: 10px;
+}
+#perso_vie::-moz-progress-bar {
+  background-color: red;
+  height: 10px;
+}
+#experience::-moz-progress-bar {
+  background-color: #b17b3b;
+  height: 10px;
+}
+#perso_endurance::-moz-progress-bar {
+  background-color: green;
+}
+
+.navigation {
+  border: 1px #b17b3b solid;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+}
+.navigation h2 {
+  color: #ffd230;
+  margin-bottom: 10px;
+}
+.navigation ul {
+  list-style: none;
+  padding-left: 20px;
+}
+.navigation a {
+  display: block;
+  color: white;
+  font-size: 18px;
+  width: 100%;
+}

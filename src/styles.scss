@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+@use './styles/index' as *;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-shadow: 1px 1px 2px black;
+}
+body {
+  background-image: url('/assets/images/opz_bg.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  padding: $gap-size;
+  display: flex;
+  flex-direction: column;
+  gap: $gap-size;
+  justify-content: flex-start;
+}
+@font-face {
+  font-family: 'Anime';
+  src: url('/assets/fonts/animeace2bb_tt/animeace2_reg.ttf') format('truetype');
+}
+main {
+  margin-top: $gap-size;
+}

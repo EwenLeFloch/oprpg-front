@@ -1,13 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { Auth } from '../../core/services/auth';
 import { Navbar } from '../../shared/components/navbar/navbar';
 
 @Component({
   selector: 'app-inscription',
-  imports: [FormsModule, Navbar],
+  imports: [FormsModule, Navbar, RouterLink],
   templateUrl: './inscription.html',
   styleUrl: './inscription.scss',
 })
@@ -18,14 +18,61 @@ export class Inscription {
   pseudo = '';
   email = '';
   motDePasse = '';
+  confirmationMotDePasse = '';
 
-  erreur = signal<string | null>(null);
+  erreurPseudo = signal<string | null>(null);
+  erreurEmail = signal<string | null>(null);
+  erreurMotDePasse = signal<string | null>(null);
+  erreurConfirmation = signal<string | null>(null);
+  erreurServeur = signal<string | null>(null);
   chargement = signal(false);
 
-  inscrire(): void {
-    this.erreur.set(null);
-    this.chargement.set(true);
+  validerPseudo(): void {
+    this.erreurPseudo.set(
+      this.pseudo.trim().length < 3 ? 'Le pseudo doit contenir au moins 3 caractères.' : null,
+    );
+  }
 
+  validerEmail(): void {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    this.erreurEmail.set(emailRegex.test(this.email) ? null : 'Adresse email invalide.');
+  }
+
+  validerMotDePasse(): void {
+    this.erreurMotDePasse.set(
+      this.motDePasse.length < 8 ? 'Le mot de passe doit contenir au moins 8 caractères.' : null,
+    );
+    if (this.confirmationMotDePasse) {
+      this.validerConfirmation();
+    }
+  }
+
+  validerConfirmation(): void {
+    this.erreurConfirmation.set(
+      this.motDePasse == this.confirmationMotDePasse
+        ? null
+        : 'Les mots de passe ne correspondent pas.',
+    );
+  }
+
+  private formulaireValide(): boolean {
+    this.validerPseudo();
+    this.validerEmail();
+    this.validerMotDePasse();
+    this.validerConfirmation();
+    return (
+      !this.erreurPseudo() &&
+      !this.erreurEmail() &&
+      !this.erreurMotDePasse() &&
+      !this.erreurConfirmation()
+    );
+  }
+
+  inscrire(): void {
+    this.erreurServeur.set(null);
+    if (!this.formulaireValide()) return;
+
+    this.chargement.set(true);
     this.auth
       .inscrire({
         pseudo: this.pseudo,
@@ -39,7 +86,7 @@ export class Inscription {
         },
         error: (error) => {
           this.chargement.set(false);
-          this.erreur.set(error?.error?.message ?? 'Erreur lors de l’inscription.');
+          this.erreurServeur.set(error?.error?.message ?? "Erreur lors de l'inscription.");
         },
       });
   }

@@ -1,5 +1,57 @@
+@use '../styles/index' as *;
+
 .navbar {
-  display: flex;
-  width: 100%;
+  position: relative;
+  border-radius: $border-radius-section;
   height: 80px;
+  background-image: url('/assets/images/oprpg_header.png');
+  background-size: cover;
+  background-position-y: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 $gap-size;
+  box-shadow: 1px 1px 2px 1px #000000;
+
+  .logo {
+    padding-top: 5px;
+    height: 80%;
+    position: relative;
+  }
+
+  .logo_link {
+    position: absolute;
+    top: 0;
+    left: $gap-size;
+    width: 200px;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .zero {
+    position: absolute;
+    top: 75%;
+    left: 120px;
+    height: 70%;
+  }
+
+  .links {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    height: 100%;
+
+    a {
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: white;
+      font-family: 'Anime', sans-serif;
+      -webkit-text-stroke: 0.5px black;
+      height: 100%;
+      width: 100%;
+      text-shadow: 2px 2px 2px black;
+    }
+  }
 }

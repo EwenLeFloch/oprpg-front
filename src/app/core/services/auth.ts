@@ -18,7 +18,7 @@ export interface UtilisateurResponse {
 }
 
 export interface ConnexionRequest {
-  email: string;
+  identifiant: string;
   motDePasse: string;
 }
 
@@ -41,15 +41,13 @@ export class Auth {
   }
 
   connecter(request: ConnexionRequest): Observable<ConnexionResponse> {
-    return this.http
-      .post<ConnexionResponse>(`${this.apiUrl}/connexion`, request)
-      .pipe(
-        tap((response) => {
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('pseudo', response.pseudo);
-          localStorage.setItem('role', response.role);
-        }),
-      );
+    return this.http.post<ConnexionResponse>(`${this.apiUrl}/connexion`, request).pipe(
+      tap((response) => {
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('pseudo', response.pseudo);
+        localStorage.setItem('role', response.role);
+      }),
+    );
   }
 
   deconnecter(): void {

@@ -1,0 +1,23 @@
+@use 'variables' as *;
+
+@mixin section-panel($bg-image) {
+  width: 100%;
+  border-radius: $border-radius-section;
+  font-size: 18px;
+  text-align: justify;
+  border: 2px solid $color-gold;
+  box-shadow: 1px 1px 2px 1px #000000;
+  background-image: url($bg-image);
+  background-size: cover;
+  background-position: center bottom;
+  padding: $gap-size;
+}
+
+@mixin card-base() {
+  color: white;
+  background-color: $color-card-bg;
+  border-radius: $border-radius-section;
+  border: 1px solid $color-gold;
+  font-size: 16px;
+  min-width: $card-min-width;
+}
