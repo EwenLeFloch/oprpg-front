@@ -32,6 +32,5 @@ export class Navbar implements OnInit {
 
   deconnecter(): void {
     this.auth.deconnecter();
-    this.router.navigate(['/connexion']);
   }
 }

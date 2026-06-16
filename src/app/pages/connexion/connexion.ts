@@ -56,7 +56,7 @@ export class Connexion {
       .subscribe({
         next: () => {
           this.chargement.set(false);
-          this.router.navigate(['/accueil']);
+          this.router.navigate(['/monde']);
         },
         error: () => {
           this.chargement.set(false);
