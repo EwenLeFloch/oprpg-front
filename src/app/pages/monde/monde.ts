@@ -71,8 +71,8 @@ export class Monde implements AfterViewInit {
   }
 
   private initialiserCarte(): void {
-    const largeur = 1600;
-    const hauteur = 900;
+    const largeur = 1776;
+    const hauteur = 887;
 
     const bounds: L.LatLngBoundsExpression = [
       [0, 0],
@@ -84,7 +84,7 @@ export class Monde implements AfterViewInit {
       zoomControl: false,
       attributionControl: false,
       minZoom: -2,
-      maxZoom: 2,
+      maxZoom: 3,
       maxBoundsViscosity: 0.8,
     });
 
@@ -103,27 +103,36 @@ export class Monde implements AfterViewInit {
 
     let derniereIleDebloquee: L.LatLngExpression | null = null;
 
-    iles.forEach((ile, index) => {
+    iles.forEach((ile) => {
       const accessible = this.ileDebloquee(ile);
 
-      const x = 350 + index * 180;
-      const y = 450;
-
-      const position: L.LatLngExpression = [y, x];
+      const position: L.LatLngExpression = [ile.positionY, ile.positionX];
 
       if (accessible) {
         derniereIleDebloquee = position;
       }
 
+      const icon = L.divIcon({
+        className: 'island-marker',
+        html: `
+    <div class="island-content">
+      <img src="/assets/images/islands/${ile.nomImage}/icon.png" />
+      <span>${ile.nom}</span>
+    </div>
+  `,
+        iconSize: [120, 100],
+        iconAnchor: [60, 50],
+      });
+
       const marker = L.marker(position, {
+        icon,
         opacity: accessible ? 1 : 0.45,
       }).addTo(this.map!);
 
       marker.bindPopup(`
       <strong>${ile.nom}</strong><br>
-      Niveau requis : ${ile.niveauRequis}<br>
-      ${accessible ? 'Île accessible' : 'Île verrouillée'}
-    `);
+      Niveau requis : ${ile.niveauRequis}
+  `);
 
       if (accessible) {
         marker.on('click', () => this.allerVersIle(ile));

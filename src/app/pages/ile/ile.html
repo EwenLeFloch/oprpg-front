@@ -6,7 +6,6 @@
     <p class="error">{{ erreur() }}</p>
   } @else if (ile(); as ile) {
     <section class="ile-hero">
-      <img [src]="ile.imagePath" [alt]="ile.nom" class="ile-image" />
       <div class="ile-titre">
         <button type="button" class="btn-retour" (click)="retourMonde()">← Monde</button>
         <h1>{{ ile.nom }}</h1>

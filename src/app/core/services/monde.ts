@@ -7,9 +7,11 @@ import { API_BASE_URL } from '../config/api.config';
 export interface IleData {
   id: number;
   nom: string;
-  imagePath: string;
+  nomImage: string;
   description: string;
   niveauRequis: number;
+  positionX: number;
+  positionY: number;
 }
 
 export interface Zone {
