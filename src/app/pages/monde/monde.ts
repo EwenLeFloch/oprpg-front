@@ -24,7 +24,12 @@ export class Monde implements AfterViewInit {
   erreur = signal<string | null>(null);
 
   private map?: L.Map;
-
+  private readonly zonesLayer = L.layerGroup();
+  private readonly zoomParDefaut = 1;
+  private readonly zoomIle = 3;
+  private clicResetEffectue = false;
+  private ileSelectionnee: IleData | null = null;
+  private derniereIleDebloquee: L.LatLngExpression | null = null;
   ngAfterViewInit(): void {
     this.initialiserCarte();
     this.chargerDonnees();
@@ -81,9 +86,10 @@ export class Monde implements AfterViewInit {
 
     this.map = L.map('world-map', {
       crs: L.CRS.Simple,
-      zoomControl: false,
+      zoomControl: true,
+      scrollWheelZoom: false,
       attributionControl: false,
-      minZoom: -2,
+      minZoom: 0,
       maxZoom: 3,
       maxBoundsViscosity: 0.8,
     });
@@ -91,9 +97,9 @@ export class Monde implements AfterViewInit {
     L.imageOverlay('/assets/images/map-monde.png', bounds).addTo(this.map);
 
     this.map.setMaxBounds(bounds);
-    this.map.fitBounds(bounds, {
-      padding: [0, 0],
-    });
+    this.map.setView([hauteur / 2, largeur / 2], this.zoomParDefaut);
+
+    this.activerResetAuClicCarte();
   }
 
   private ajouterMarqueursIles(iles: IleData[]): void {
@@ -101,50 +107,146 @@ export class Monde implements AfterViewInit {
       return;
     }
 
-    let derniereIleDebloquee: L.LatLngExpression | null = null;
+    this.zonesLayer.addTo(this.map);
 
     iles.forEach((ile) => {
       const accessible = this.ileDebloquee(ile);
-
       const position: L.LatLngExpression = [ile.positionY, ile.positionX];
 
       if (accessible) {
-        derniereIleDebloquee = position;
+        this.derniereIleDebloquee = position;
       }
 
-      const icon = L.divIcon({
-        className: 'island-marker',
-        html: `
-    <div class="island-content">
-      <img src="/assets/images/islands/${ile.nomImage}/icon.png" />
-      <span>${ile.nom}</span>
-    </div>
-  `,
-        iconSize: [120, 100],
-        iconAnchor: [60, 50],
-      });
+      const tailleIle = 40;
 
-      const marker = L.marker(position, {
-        icon,
+      const boundsIle: L.LatLngBoundsExpression = [
+        [ile.positionY - tailleIle / 2, ile.positionX - tailleIle / 2],
+        [ile.positionY + tailleIle / 2, ile.positionX + tailleIle / 2],
+      ];
+
+      const overlay = L.imageOverlay(`/assets/images/islands/${ile.nomImage}_icon.png`, boundsIle, {
         opacity: accessible ? 1 : 0.45,
+        interactive: true,
       }).addTo(this.map!);
 
-      marker.bindPopup(`
-      <strong>${ile.nom}</strong><br>
-      Niveau requis : ${ile.niveauRequis}
-  `);
-
       if (accessible) {
-        marker.on('click', () => this.allerVersIle(ile));
+        overlay.on('click', (event) => {
+          L.DomEvent.stopPropagation(event);
+          this.ileSelectionnee = ile;
+          this.clicResetEffectue = false;
+          this.map?.setView(position, this.zoomIle);
+          this.afficherZonesIle(ile);
+        });
       }
+
+      overlay.bindTooltip(ile.nom, {
+        permanent: true,
+        direction: 'bottom',
+        offset: [0, 24],
+        className: 'island-label',
+      });
+    });
+
+    this.map.on('zoomend', () => {
+      this.gererAffichageSelonZoom();
+      this.ajusterLabelsIles();
     });
 
     setTimeout(() => {
       this.map?.invalidateSize();
 
-      if (derniereIleDebloquee) {
-        this.map?.setView(derniereIleDebloquee, 0);
+      if (this.derniereIleDebloquee) {
+        this.map?.setView(this.derniereIleDebloquee, this.zoomParDefaut);
       }
+
+      this.gererAffichageSelonZoom();
+      this.ajusterLabelsIles();
+    });
+  }
+
+  private afficherZonesIle(ile: IleData): void {
+    if (!this.map) {
+      return;
+    }
+
+    this.zonesLayer.clearLayers();
+
+    if (ile.nomImage !== 'dawn_island') {
+      return;
+    }
+
+    const positionFuschia: L.LatLngExpression = [ile.positionY + 20, ile.positionX + 35];
+
+    const villageFuschia = L.circleMarker(positionFuschia, {
+      radius: 10,
+      color: '#ffd230',
+      weight: 3,
+      fillColor: '#ffd230',
+      fillOpacity: 0.45,
+    });
+
+    villageFuschia.bindTooltip('Village de Fuschia', {
+      permanent: true,
+      direction: 'top',
+      className: 'zone-label',
+    });
+
+    villageFuschia.on('click', (event) => {
+      L.DomEvent.stopPropagation(event);
+      this.router.navigate(['/zone', 1]);
+    });
+
+    villageFuschia.addTo(this.zonesLayer);
+
+    this.gererAffichageSelonZoom();
+  }
+
+  private gererAffichageSelonZoom(): void {
+    if (!this.map) {
+      return;
+    }
+
+    const zoom = this.map.getZoom();
+
+    if (zoom < 2) {
+      this.map.removeLayer(this.zonesLayer);
+    } else if (!this.map.hasLayer(this.zonesLayer)) {
+      this.map.addLayer(this.zonesLayer);
+    }
+  }
+
+  private reinitialiserCarte(): void {
+    this.ileSelectionnee = null;
+    this.zonesLayer.clearLayers();
+
+    if (!this.derniereIleDebloquee) {
+      return;
+    }
+
+    const zoom = this.clicResetEffectue ? 0 : this.zoomParDefaut;
+
+    this.map?.setView(this.derniereIleDebloquee, zoom);
+    this.clicResetEffectue = !this.clicResetEffectue;
+
+    this.gererAffichageSelonZoom();
+  }
+
+  private activerResetAuClicCarte(): void {
+    this.map?.on('click', () => {
+      this.reinitialiserCarte();
+    });
+  }
+
+  private ajusterLabelsIles(): void {
+    if (!this.map) {
+      return;
+    }
+
+    const zoom = this.map.getZoom();
+    const offsetY = 24 + zoom * 18;
+
+    document.querySelectorAll<HTMLElement>('.island-label').forEach((label) => {
+      label.style.marginTop = `${offsetY}px`;
     });
   }
 }
