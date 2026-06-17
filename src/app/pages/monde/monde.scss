@@ -1,0 +1,124 @@
+.monde-page {
+  height: calc(100vh - 112px);
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1rem;
+  color: #f5f5f5;
+  overflow: hidden;
+}
+
+.player-panel {
+  padding: 1rem;
+  border: 1px solid #b17b3b;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.78);
+  overflow-y: auto;
+
+  h1,
+  h2 {
+    color: #ffd230;
+    font-family: 'Anime', sans-serif;
+  }
+}
+
+.status-card,
+.iles-list {
+  margin-top: 1rem;
+}
+
+.stats {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+
+  article {
+    padding: 0.75rem;
+    border: 1px solid #b17b3b;
+    border-radius: 10px;
+    background: rgba(31, 31, 31, 0.9);
+  }
+
+  span {
+    display: block;
+    color: #cfcfcf;
+    font-size: 0.85rem;
+  }
+
+  strong {
+    color: #ffffff;
+    font-size: 1.1rem;
+  }
+}
+
+.iles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    border: 1px solid #b17b3b;
+    border-radius: 10px;
+    background: #1f1f1f;
+    color: #f5f5f5;
+    cursor: pointer;
+  }
+
+  button:not(.locked):hover {
+    background: rgba(255, 210, 48, 0.2);
+  }
+
+  .locked {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  small {
+    color: #ffd230;
+  }
+}
+
+.map-section {
+  min-width: 0;
+  height: 100%;
+  border: 1px solid #b17b3b;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.78);
+}
+
+#world-map {
+  width: 100%;
+  height: 100%;
+  background: #0d1b2a;
+}
+
+:host ::ng-deep .leaflet-control-zoom {
+  display: none;
+}
+
+:host ::ng-deep .leaflet-container {
+  cursor: grab;
+}
+
+:host ::ng-deep .leaflet-container:active {
+  cursor: grabbing;
+}
+
+.error {
+  color: #ff6b6b;
+}
+
+@media (max-width: 900px) {
+  .monde-page {
+    height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .map-section {
+    height: 520px;
+  }
+}

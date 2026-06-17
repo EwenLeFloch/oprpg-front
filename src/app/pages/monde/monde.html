@@ -1,1 +1,65 @@
 <app-navbar></app-navbar>
+
+<main class="monde-page">
+  <aside class="player-panel">
+    <h1>Monde</h1>
+
+    @if (chargement()) {
+      <p>Chargement...</p>
+    } @else if (erreur()) {
+      <p class="error">{{ erreur() }}</p>
+    } @else if (progression(); as progression) {
+      <section class="status-card">
+        <h2>{{ progression.personnage }}</h2>
+        <p>Faction : {{ progression.faction ?? 'Non choisie' }}</p>
+
+        <div class="stats">
+          <article>
+            <span>Niveau</span>
+            <strong>{{ progression.niveau }}</strong>
+          </article>
+
+          <article>
+            <span>Vie</span>
+            <strong>{{ progression.vieActuelle }} / {{ progression.vieMax }}</strong>
+          </article>
+
+          <article>
+            <span>Endurance</span>
+            <strong>{{ progression.enduranceActuelle }} / {{ progression.enduranceMax }}</strong>
+          </article>
+
+          <article>
+            <span>Berries</span>
+            <strong>{{ progression.berries }}</strong>
+          </article>
+
+          <article>
+            <span>Prime</span>
+            <strong>{{ progression.prime }}</strong>
+          </article>
+        </div>
+      </section>
+
+      <section class="iles-list">
+        <h2>Îles</h2>
+
+        @for (ile of iles(); track ile.id) {
+          <button
+            type="button"
+            [class.locked]="!ileDebloquee(ile)"
+            [disabled]="!ileDebloquee(ile)"
+            (click)="allerVersIle(ile)"
+          >
+            {{ ile.nom }}
+            <small>Niveau {{ ile.niveauRequis }}</small>
+          </button>
+        }
+      </section>
+    }
+  </aside>
+
+  <section class="map-section">
+    <div id="world-map"></div>
+  </section>
+</main>
