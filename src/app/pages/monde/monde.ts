@@ -132,6 +132,7 @@ export class Monde implements AfterViewInit {
       if (accessible) {
         overlay.on('click', (event) => {
           L.DomEvent.stopPropagation(event);
+          console.log('position ile:', ile.positionY, ile.positionX);
           this.ileSelectionnee = ile;
           this.clicResetEffectue = false;
           this.map?.setView(position, this.zoomIle);
@@ -139,11 +140,20 @@ export class Monde implements AfterViewInit {
         });
       }
 
-      overlay.bindTooltip(ile.nom, {
-        permanent: true,
-        direction: 'bottom',
-        offset: [0, 24],
-        className: 'island-label',
+      const mettreAJourTooltip = (zoom: number) => {
+        overlay.unbindTooltip();
+        overlay.bindTooltip(ile.nom, {
+          permanent: true,
+          direction: 'bottom',
+          offset: zoom === 0 ? [35, 0] : [0, 24],
+          className: 'island-label',
+        });
+      };
+
+      mettreAJourTooltip(this.map!.getZoom());
+
+      this.map!.on('zoomend', () => {
+        mettreAJourTooltip(this.map!.getZoom());
       });
     });
 
@@ -161,7 +171,7 @@ export class Monde implements AfterViewInit {
 
       this.gererAffichageSelonZoom();
       this.ajusterLabelsIles();
-    });
+    }, 100);
   }
 
   private afficherZonesIle(ile: IleData): void {
@@ -171,12 +181,11 @@ export class Monde implements AfterViewInit {
 
     this.zonesLayer.clearLayers();
 
-    if (ile.nomImage !== 'dawn_island') {
+    if (ile.nomImage !== 'dawn-island') {
       return;
     }
 
-    const positionFuschia: L.LatLngExpression = [ile.positionY + 20, ile.positionX + 35];
-
+    const positionFuschia: L.LatLngExpression = [745, 1612];
     const villageFuschia = L.circleMarker(positionFuschia, {
       radius: 10,
       color: '#ffd230',
@@ -192,7 +201,7 @@ export class Monde implements AfterViewInit {
     });
 
     villageFuschia.on('click', (event) => {
-      L.DomEvent.stopPropagation(event);
+      L.DomEvent.stop(event);
       this.router.navigate(['/zone', 1]);
     });
 
@@ -223,11 +232,10 @@ export class Monde implements AfterViewInit {
       return;
     }
 
-    const zoom = this.clicResetEffectue ? 0 : this.zoomParDefaut;
-
-    this.map?.setView(this.derniereIleDebloquee, zoom);
+    const zoom = this.clicResetEffectue ? this.zoomParDefaut : 0;
     this.clicResetEffectue = !this.clicResetEffectue;
 
+    this.map?.setView(this.derniereIleDebloquee, zoom);
     this.gererAffichageSelonZoom();
   }
 
@@ -243,10 +251,22 @@ export class Monde implements AfterViewInit {
     }
 
     const zoom = this.map.getZoom();
-    const offsetY = 24 + zoom * 18;
+    let offsetY = zoom * 18;
+    let fontSize = 14;
 
+    if (zoom == 0) {
+      offsetY = 10 + zoom * 18;
+      fontSize = 6;
+    } else if (zoom == 3) {
+      offsetY = 40 + zoom * 18;
+      fontSize = 14;
+    } else {
+      offsetY = 0;
+      fontSize = 14;
+    }
     document.querySelectorAll<HTMLElement>('.island-label').forEach((label) => {
       label.style.marginTop = `${offsetY}px`;
+      label.style.fontSize = `${fontSize}px`;
     });
   }
 }
