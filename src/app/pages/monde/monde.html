@@ -1,7 +1,38 @@
 <app-navbar></app-navbar>
 
 <main class="monde-page">
-  <section class="map-section">
+  <section class="map-section" [hidden]="ileSelectionnee()">
     <div id="world-map"></div>
   </section>
+
+  @if (ileSelectionnee()) {
+    <section
+      class="ile-vue"
+      (click)="reinitialiserCarte()"
+      (keydown.enter)="reinitialiserCarte()"
+      (keydown.escape)="reinitialiserCarte()"
+    >
+      <div
+        class="ile-container"
+        (click)="$event.stopPropagation()"
+        (keydown.enter)="$event.stopPropagation()"
+      >
+        <img
+          [src]="'/assets/images/islands/' + ileSelectionnee()!.nomImage + '_icon.png'"
+          [alt]="ileSelectionnee()!.nom"
+          class="ile-image-principale"
+        />
+
+        @for (zone of zonesIleSelectionnee(); track zone.id) {
+          <div
+            class="zone-hotspot zone-{{ zone.id }}"
+            (click)="router.navigate(['/zone', zone.id])"
+            (keydown.enter)="router.navigate(['/zone', zone.id])"
+          >
+            <span class="zone-label-text">{{ zone.nom }}</span>
+          </div>
+        }
+      </div>
+    </section>
+  }
 </main>

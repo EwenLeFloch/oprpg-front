@@ -2,7 +2,7 @@ import { AfterViewInit, Component, DestroyRef, inject, signal } from '@angular/c
 import { Router } from '@angular/router';
 import * as L from 'leaflet';
 
-import { IleData, MondeService } from '../../core/services/monde';
+import { IleData, MondeService, ZoneData } from '../../core/services/monde';
 import { ProgressionJoueur, ProgressionService } from '../../core/services/progression';
 import { Navbar } from '../../shared/components/navbar/navbar';
 
@@ -15,21 +15,24 @@ import { Navbar } from '../../shared/components/navbar/navbar';
 export class Monde implements AfterViewInit {
   private readonly mondeService = inject(MondeService);
   private readonly progressionService = inject(ProgressionService);
-  private readonly router = inject(Router);
+  readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
 
   progression = signal<ProgressionJoueur | null>(null);
   iles = signal<IleData[]>([]);
+  ileSelectionnee = signal<IleData | null>(null);
+  zonesIleSelectionnee = signal<ZoneData[]>([]);
   chargement = signal(true);
   erreur = signal<string | null>(null);
 
   private map?: L.Map;
-  private readonly zonesLayer = L.layerGroup();
-  private readonly zoomParDefaut = 0;
-  private readonly zoomIle = 2;
-  private clicResetEffectue = false;
-  private ileSelectionnee: IleData | null = null;
-  private derniereIleDebloquee: L.LatLngExpression | null = null;
+  private readonly largeur = 1672;
+  private readonly hauteur = 941;
+  private readonly bounds: L.LatLngBoundsExpression = [
+    [0, 0],
+    [this.hauteur, this.largeur],
+  ];
+
   ngAfterViewInit(): void {
     this.initialiserCarte();
     this.chargerDonnees();
@@ -39,13 +42,14 @@ export class Monde implements AfterViewInit {
     });
   }
 
-  allerVersIle(ile: IleData): void {
-    this.router.navigate(['/ile', ile.id]);
-  }
-
   ileDebloquee(ile: IleData): boolean {
     const progression = this.progression();
     return !!progression && progression.niveau >= ile.niveauRequis;
+  }
+
+  reinitialiserCarte(): void {
+    this.ileSelectionnee.set(null);
+    this.zonesIleSelectionnee.set([]);
   }
 
   private chargerDonnees(): void {
@@ -76,29 +80,32 @@ export class Monde implements AfterViewInit {
   }
 
   private initialiserCarte(): void {
-    const largeur = 1672;
-    const hauteur = 941;
-
-    const bounds: L.LatLngBoundsExpression = [
-      [0, 0],
-      [hauteur, largeur],
-    ];
-
     this.map = L.map('world-map', {
       crs: L.CRS.Simple,
       zoomControl: true,
       scrollWheelZoom: false,
       attributionControl: false,
-      minZoom: 0,
+      minZoom: -1,
       maxZoom: 2,
+      zoomSnap: 0,
     });
 
-    L.imageOverlay('/assets/images/map-monde.png', bounds).addTo(this.map);
+    L.imageOverlay('/assets/images/map-monde.png', this.bounds).addTo(this.map);
+    this.map.setMaxBounds(this.bounds);
 
-    this.map.setMaxBounds(bounds);
-    this.map.setView([hauteur / 2, largeur / 2], this.zoomParDefaut);
+    const container = document.getElementById('world-map');
+    if (container) {
+      const observer = new ResizeObserver(() => {
+        this.map?.invalidateSize();
+        this.map?.fitBounds(this.bounds, { padding: [0, 0] });
+        observer.disconnect();
+      });
+      observer.observe(container);
+    }
 
-    this.activerResetAuClicCarte();
+    this.map.on('click', () => {
+      this.reinitialiserCarte();
+    });
   }
 
   private ajouterMarqueursIles(iles: IleData[]): void {
@@ -106,18 +113,10 @@ export class Monde implements AfterViewInit {
       return;
     }
 
-    this.zonesLayer.addTo(this.map);
-
     iles.forEach((ile) => {
       const accessible = this.ileDebloquee(ile);
-      const position: L.LatLngExpression = [ile.positionY, ile.positionX];
-
-      if (accessible) {
-        this.derniereIleDebloquee = position;
-      }
 
       const tailleIle = 40;
-
       const boundsIle: L.LatLngBoundsExpression = [
         [ile.positionY - tailleIle / 2, ile.positionX - tailleIle / 2],
         [ile.positionY + tailleIle / 2, ile.positionX + tailleIle / 2],
@@ -131,20 +130,34 @@ export class Monde implements AfterViewInit {
       if (accessible) {
         overlay.on('click', (event) => {
           L.DomEvent.stopPropagation(event);
-          console.log('position ile:', ile.positionY, ile.positionX);
-          this.ileSelectionnee = ile;
-          this.clicResetEffectue = false;
-          this.map?.setView(position, this.zoomIle);
-          this.afficherZonesIle(ile);
+          this.mondeService.recupererZonesParIle(ile.id).subscribe({
+            next: (zones) => {
+              this.zonesIleSelectionnee.set(zones);
+              this.ileSelectionnee.set(ile);
+            },
+            error: () => {
+              this.erreur.set('Impossible de récupérer les zones.');
+            },
+          });
         });
       }
 
       const mettreAJourTooltip = (zoom: number) => {
         overlay.unbindTooltip();
+
+        let offset: L.PointExpression;
+        if (zoom < 0) {
+          offset = [20, 20];
+        } else if (zoom < 1) {
+          offset = [35, 0];
+        } else {
+          offset = [0, 24];
+        }
+
         overlay.bindTooltip(ile.nom, {
           permanent: true,
           direction: 'bottom',
-          offset: zoom === 0 ? [35, 0] : [0, 24],
+          offset,
           className: 'island-label',
         });
       };
@@ -157,91 +170,14 @@ export class Monde implements AfterViewInit {
     });
 
     this.map.on('zoomend', () => {
-      this.gererAffichageSelonZoom();
       this.ajusterLabelsIles();
     });
 
     setTimeout(() => {
       this.map?.invalidateSize();
-
-      if (this.derniereIleDebloquee) {
-        this.map?.setView(this.derniereIleDebloquee, this.zoomParDefaut);
-      }
-
-      this.gererAffichageSelonZoom();
+      this.map?.fitBounds(this.bounds, { padding: [0, 0] });
       this.ajusterLabelsIles();
-    }, 100);
-  }
-
-  private afficherZonesIle(ile: IleData): void {
-    if (!this.map) {
-      return;
-    }
-
-    this.zonesLayer.clearLayers();
-
-    if (ile.nomImage !== 'dawn-island') {
-      return;
-    }
-
-    const positionFuschia: L.LatLngExpression = [500, 1500];
-    const villageFuschia = L.circleMarker(positionFuschia, {
-      radius: 10,
-      color: '#ffd230',
-      weight: 3,
-      fillColor: '#ffd230',
-      fillOpacity: 0.45,
-    });
-
-    villageFuschia.bindTooltip('Village de Fuschia', {
-      permanent: true,
-      direction: 'top',
-      className: 'zone-label',
-    });
-
-    villageFuschia.on('click', (event) => {
-      L.DomEvent.stop(event);
-      this.router.navigate(['/zone', 1]);
-    });
-
-    villageFuschia.addTo(this.zonesLayer);
-
-    this.gererAffichageSelonZoom();
-  }
-
-  private gererAffichageSelonZoom(): void {
-    if (!this.map) {
-      return;
-    }
-
-    const zoom = this.map.getZoom();
-
-    if (zoom < 2) {
-      this.map.removeLayer(this.zonesLayer);
-    } else if (!this.map.hasLayer(this.zonesLayer)) {
-      this.map.addLayer(this.zonesLayer);
-    }
-  }
-
-  private reinitialiserCarte(): void {
-    this.ileSelectionnee = null;
-    this.zonesLayer.clearLayers();
-
-    if (!this.derniereIleDebloquee) {
-      return;
-    }
-
-    const zoom = this.clicResetEffectue ? this.zoomParDefaut : 0;
-    this.clicResetEffectue = !this.clicResetEffectue;
-
-    this.map?.setView(this.derniereIleDebloquee, zoom);
-    this.gererAffichageSelonZoom();
-  }
-
-  private activerResetAuClicCarte(): void {
-    this.map?.on('click', () => {
-      this.reinitialiserCarte();
-    });
+    }, 200);
   }
 
   private ajusterLabelsIles(): void {
@@ -250,19 +186,20 @@ export class Monde implements AfterViewInit {
     }
 
     const zoom = this.map.getZoom();
-    let offsetY = zoom * 18;
-    let fontSize = 14;
+    let offsetY: number;
+    let fontSize: number;
 
-    if (zoom == 0) {
-      offsetY = 10 + zoom * 18;
-      fontSize = 6;
-    } else if (zoom == 3) {
-      offsetY = 40 + zoom * 18;
+    if (zoom < 0) {
+      offsetY = -20;
+      fontSize = 8;
+    } else if (zoom >= 2) {
+      offsetY = 76;
       fontSize = 14;
     } else {
       offsetY = 0;
       fontSize = 14;
     }
+
     document.querySelectorAll<HTMLElement>('.island-label').forEach((label) => {
       label.style.marginTop = `${offsetY}px`;
       label.style.fontSize = `${fontSize}px`;
