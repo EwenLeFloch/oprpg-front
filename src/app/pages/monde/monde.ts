@@ -25,8 +25,8 @@ export class Monde implements AfterViewInit {
 
   private map?: L.Map;
   private readonly zonesLayer = L.layerGroup();
-  private readonly zoomParDefaut = 1;
-  private readonly zoomIle = 3;
+  private readonly zoomParDefaut = 0;
+  private readonly zoomIle = 2;
   private clicResetEffectue = false;
   private ileSelectionnee: IleData | null = null;
   private derniereIleDebloquee: L.LatLngExpression | null = null;
@@ -76,8 +76,8 @@ export class Monde implements AfterViewInit {
   }
 
   private initialiserCarte(): void {
-    const largeur = 1776;
-    const hauteur = 887;
+    const largeur = 1672;
+    const hauteur = 941;
 
     const bounds: L.LatLngBoundsExpression = [
       [0, 0],
@@ -90,8 +90,7 @@ export class Monde implements AfterViewInit {
       scrollWheelZoom: false,
       attributionControl: false,
       minZoom: 0,
-      maxZoom: 3,
-      maxBoundsViscosity: 0.8,
+      maxZoom: 2,
     });
 
     L.imageOverlay('/assets/images/map-monde.png', bounds).addTo(this.map);
@@ -185,7 +184,7 @@ export class Monde implements AfterViewInit {
       return;
     }
 
-    const positionFuschia: L.LatLngExpression = [745, 1612];
+    const positionFuschia: L.LatLngExpression = [500, 1500];
     const villageFuschia = L.circleMarker(positionFuschia, {
       radius: 10,
       color: '#ffd230',

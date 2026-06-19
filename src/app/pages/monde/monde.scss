@@ -9,15 +9,16 @@
 .map-section {
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  background: rgba(0, 0, 0, 0.78);
-  border: 1px $color-gold solid;
   border-radius: 10px;
 }
 
 #world-map {
   width: calc(100% - 1px);
   height: 100%;
+}
+
+.leaflet-container {
+  background: transparent;
 }
 
 :host ::ng-deep .island-label {
