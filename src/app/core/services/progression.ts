@@ -33,4 +33,8 @@ export class ProgressionService {
   seReposer(): Observable<ProgressionJoueur> {
     return this.http.post<ProgressionJoueur>(`${API_BASE_URL}/progression/repos`, {});
   }
+
+  boireDuLait(): Observable<ProgressionJoueur> {
+    return this.http.post<ProgressionJoueur>(`${API_BASE_URL}/progression/boire-lait`, {});
+  }
 }

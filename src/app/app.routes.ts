@@ -36,6 +36,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/ile/ile').then((m) => m.Ile),
   },
   {
+    path: 'zone/:zoneId',
+    canActivate: [authGuard],
+    loadComponent: () => import('./pages/zone/zone').then((m) => m.Zone),
+  },
+  {
     path: 'combat/:zoneId',
     canActivate: [authGuard],
     loadComponent: () => import('./pages/combat/combat').then((m) => m.Combat),
@@ -44,11 +49,6 @@ export const routes: Routes = [
     path: 'faction',
     canActivate: [authGuard, factionGuard],
     loadComponent: () => import('./pages/faction/faction').then((m) => m.FactionPage),
-  },
-  {
-    path: 'auberge',
-    canActivate: [authGuard],
-    loadComponent: () => import('./pages/auberge/auberge').then((m) => m.Auberge),
   },
   {
     path: '**',

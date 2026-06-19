@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { IleData, MondeService, Zone } from '../../core/services/monde';
+import { IleData, MondeService, ZoneData } from '../../core/services/monde';
 import { Navbar } from '../../shared/components/navbar/navbar';
 
 @Component({
@@ -18,7 +18,7 @@ export class Ile {
   private readonly ileId = Number(this.route.snapshot.paramMap.get('ileId'));
 
   ile = signal<IleData | null>(null);
-  zones = signal<Zone[]>([]);
+  zones = signal<ZoneData[]>([]);
   chargement = signal(true);
   erreur = signal<string | null>(null);
 
@@ -48,7 +48,7 @@ export class Ile {
     });
   }
 
-  allerAuCombat(zone: Zone): void {
+  allerAuCombat(zone: ZoneData): void {
     this.router.navigate(['/combat', zone.id]);
   }
 

@@ -1,0 +1,41 @@
+<app-navbar></app-navbar>
+<main class="zone-page">
+  @if (chargement()) {
+    <p class="zone-chargement">Chargement...</p>
+  } @else if (erreur()) {
+    <p class="zone-erreur">{{ erreur() }}</p>
+  } @else if (zone() && progression()) {
+    <aside class="zone-sidebar">
+      <div class="sidebar-makino">
+        @if (makino()) {
+          <img
+            [src]="'assets/images/personnages/' + makino()!.nomImage + '.png'"
+            [alt]="makino()!.nom"
+            class="makino-img"
+          />
+        }
+        <p class="makino-texte" [innerHTML]="messageMakino()"></p>
+      </div>
+    </aside>
+
+    <section class="zone-contenu">
+      <div class="zone-image-container">
+        <button type="button" class="btn-auberge" [disabled]="reposEnCours()" (click)="seReposer()">
+          <span>Auberge</span>
+        </button>
+
+        <button type="button" class="btn-bar" [disabled]="laitEnCours()" (click)="boireDuLait()">
+          <span>Bar</span>
+        </button>
+
+        <button type="button" class="btn-combat" (click)="allerCombattre()">
+          <span>Combattre</span>
+        </button>
+      </div>
+
+      @if (erreur()) {
+        <p class="zone-erreur">{{ erreur() }}</p>
+      }
+    </section>
+  }
+</main>

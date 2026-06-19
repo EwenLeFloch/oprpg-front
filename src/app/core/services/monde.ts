@@ -14,7 +14,7 @@ export interface IleData {
   positionY: number;
 }
 
-export interface Zone {
+export interface ZoneData {
   id: number;
   nom: string;
   niveauRequis: number;
@@ -36,7 +36,11 @@ export class MondeService {
     return this.http.get<IleData>(`${API_BASE_URL}/iles/${ileId}`);
   }
 
-  recupererZonesParIle(ileId: number): Observable<Zone[]> {
-    return this.http.get<Zone[]>(`${API_BASE_URL}/zones/ile/${ileId}`);
+  recupererZonesParIle(ileId: number): Observable<ZoneData[]> {
+    return this.http.get<ZoneData[]>(`${API_BASE_URL}/zones/ile/${ileId}`);
+  }
+
+  recupererZoneParId(zoneId: number): Observable<ZoneData> {
+    return this.http.get<ZoneData>(`${API_BASE_URL}/zones/${zoneId}`);
   }
 }

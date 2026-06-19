@@ -1,0 +1,82 @@
+@use 'index' as *;
+
+.zone-page {
+  display: flex;
+  gap: $gap-size;
+  height: calc(100vh - 200px);
+}
+
+.zone-sidebar {
+  width: 240px;
+  min-width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.sidebar-makino {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  text-align: center;
+}
+
+.makino-img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.makino-texte {
+  font-size: 16px;
+  color: #fff;
+  line-height: 1.6;
+}
+
+.zone-contenu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.zone-image-container {
+  position: relative;
+  flex: 1;
+  background-image: url('../../../../public/assets/images/zones/fuschia.jpg');
+  background-size: cover;
+}
+
+button {
+  height: 100%;
+  width: 33%;
+  font-size: 16px;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  z-index: 2;
+  font-family: 'Anime', Arial, Helvetica, sans-serif;
+}
+
+.btn-auberge span {
+  display: inline-block;
+  position: relative;
+  left: 62px;
+  top: 5px;
+  rotate: 11deg;
+}
+.btn-bar span {
+  display: inline-block;
+  position: relative;
+  left: 40px;
+  top: 27px;
+  rotate: 5deg;
+}
+.zone-chargement {
+  padding: 2rem;
+  color: #aaa;
+}

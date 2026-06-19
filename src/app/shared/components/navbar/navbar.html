@@ -8,10 +8,6 @@
     @if (estConnecte()) {
       <a routerLink="/monde">Monde</a>
 
-      @if (zoneId()) {
-        <a [routerLink]="['/combat', zoneId()]">Combat</a>
-      }
-
       <a routerLink="/profil">Profil</a>
       <a routerLink="/" (click)="deconnecter()">Déconnexion</a>
     } @else {
